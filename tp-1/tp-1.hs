@@ -61,7 +61,33 @@ data DiaDeSemana = Lunes | Martes | Miercoles | Jueves | Viernes | Sabado | Domi
     deriving Show
 
 --a 
--- primerYUltimoDia :: (DiaDeSemana, DiaDeSemana)
+primerYUltimoDia :: (DiaDeSemana, DiaDeSemana)
+primerYUltimoDia = (Lunes, Domingo)
+
+--b
+empiezaConM :: DiaDeSemana -> Bool
+empiezaConM Martes    = True
+empiezaConM Miercoles = True
+empiezaConM _         = False
+
+--c
+vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool:que
+vieneDespues a b = numeroDeDia a > numeroDeDia b
+
+numeroDeDia :: DiaDeSemana -> Int
+numeroDeDia Lunes      = 1
+numeroDeDia Martes     = 2
+numeroDeDia Miercoles  = 3
+numeroDeDia Jueves     = 4
+numeroDeDia Viernes    = 5
+numeroDeDia Sabado     = 6
+numeroDeDia Domingo    = 7
+
+--d
+estaEnElMedio :: DiaDeSemana -> Bool
+estaEnElMedio Lunes = False
+estaEnElMedio Domingo = False
+estaEnElMedio _ = True
 
 --3
 --a 
