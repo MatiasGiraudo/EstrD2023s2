@@ -70,8 +70,85 @@ lasDeLongitudMayorA n (x:xs) = if(n < (longitud x))
 -- agregarAlFinal (x:xs) e = e : agregarAlFinal xs e
 
 --12
-agregar :: [a] -> [a] -> [a]
-    --agregar [1,2] [2,3,4]
-agregar [] [] = 
-agregar (x:xs) (y:ys) = x y .. agregar xs ys    
+-- agregar :: [a] -> [a] -> [a]
+--     --agregar [1,2] [2,3,4]
+-- agregar [] [] = 
+-- agregar (x:xs) (y:ys) = x y .. agregar xs ys
 
+-- --13
+-- reversa :: [a] -> [a]
+
+-- --14
+-- zipMaximos :: [Int] -> [Int] -> [Int]
+
+--15
+elMinimo :: Ord a => [a] -> a
+--PREC: La lista no esta vacía
+elMinimo []     = error "La lista no puede estar vacía"
+elMinimo (x:xs) = if(x < elMinimo xs)
+                    then x
+                    else elMinimo xs    
+
+-- # 2 RECURSION SOBRE NUMEROS
+--1
+factorial :: Int -> Int
+    --v 3*2*1
+factorial 0 = 1
+factorial n = if(n < 0)
+                then error "El factorial no esta definido para numeros negativos"
+                else n * factorial (n-1)
+
+--2
+cuentaRegresiva :: Int -> [Int]
+    --cuentaRegresiva 5 [5,4,3,2,1,0]
+cuentaRegresiva 0 = 0:[]
+cuentaRegresiva n = n : cuentaRegresiva (n-1)
+
+--3
+repetir :: Int -> a -> [a]
+repetir 0 _ = []
+repetir n e = e : repetir (n-1) e
+
+--4
+-- losPrimeros :: Int -> [a] -> [a]
+--     --losPrimeros 2 [4,6,7,2,3] --> [4,6]
+-- losPrimeros 0 []     =
+-- losPrimeros n (x:xs) = n x ... losPrimeros (n-1) xs    
+
+--5
+-- sinLosPrimeros :: Int -> [a] -> [a]
+
+-- # 3 REGISTROS
+--1
+data Persona = P String Int
+               --Nombre Edad
+    deriving Show
+
+marcos = P "Marcos" 20
+matilda = P "Matilda" 30
+pedro = P "Pedro" 58
+nahuel = P "Nahuel" 45
+
+edad :: Persona -> Int
+edad (P _ e) = e
+
+--a
+mayoresA :: Int -> [Persona] -> [Persona]
+    --mayoresA 40 [marcos, matilda, pedro, nahuel]
+mayoresA _ []     = []
+mayoresA n (x:xs) = if(edad x > n)
+                        then x : mayoresA n xs
+                        else mayoresA n xs
+
+--b
+-- promedioEdad :: [Persona] -> Int
+-- promedioEdad [] = error "La lista debe tener al menos una Persona"
+-- promedioEdad (x:xs) = x ... promedioEdad xs                    
+
+--c
+elMasViejo :: [Persona] -> Persona
+--PREC: La lista no esta vacía
+elMasViejo [x]    = x
+elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
+                        then x 
+                        else elMasViejo xs
