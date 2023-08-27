@@ -176,17 +176,17 @@ esTipoSuperior _      _     = False
 
 --b
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E _ pk1 pk2) = cantidadDelMismoTipo pk1 pk2 t
+cantidadDePokemonDe t (E _ pk1 pk2) = cantidadDelMismoTipoPokemon pk1 pk2 t
 
-cantidadDelMismoTipo :: Pokemon -> Pokemon -> TipoDePokemon -> Int
-cantidadDelMismoTipo (Pk t1 _) (Pk t2 _) tp =    unoSiCeroSino (esPkMismoTipo t1 tp)
-                                               + unoSiCeroSino (esPkMismoTipo t2 tp)
+cantidadDelMismoTipoPokemon :: Pokemon -> Pokemon -> TipoDePokemon -> Int
+cantidadDelMismoTipoPokemon (Pk t1 _) (Pk t2 _) tp =    unoSiCeroSino (esMismoTipoPokemon t1 tp)
+                                                      + unoSiCeroSino (esMismoTipoPokemon t2 tp)
 
-esPkMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
-esPkMismoTipo Agua   Agua   = True
-esPkMismoTipo Fuego  Fuego  = True
-esPkMismoTipo Planta Planta = True
-esPkMismoTipo _      _      = False    
+esMismoTipoPokemon :: TipoDePokemon -> TipoDePokemon -> Bool
+esMismoTipoPokemon Agua   Agua   = True
+esMismoTipoPokemon Fuego  Fuego  = True
+esMismoTipoPokemon Planta Planta = True
+esMismoTipoPokemon _      _      = False    
 
 unoSiCeroSino :: Bool -> Int
 unoSiCeroSino True = 1
