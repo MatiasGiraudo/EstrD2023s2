@@ -227,20 +227,23 @@ estaVacia _  = False
 
 --3
 elPrimero :: [a] -> a
+--PRECOND: La lista no esta vacía
 elPrimero (x : _) = x
 elPrimero _ = error "La lista esta vacia"
 
 --4
 sinElPrimero :: [a] -> [a]
+--PRECOND: La lista tiene mas de un elemento
 sinElPrimero (_ : xs) = xs
 sinElPrimero _        = error "La lista no tiene mas de un elemento"
 
 --5
---PREC: La lista no esta vacia y tiene mas de un elemento 
 splitHead :: [a] -> (a, [a])
+--PRECOND: La lista no esta vacia y tiene mas de un elemento 
 splitHead l = (elPrimero l, sinElPrimero l)
 
 splitHead' :: [a] -> (a, [a])
+--PRECOND: La lista no esta vacia y tiene mas de un elemento 
 splitHead' (x:xs) = (x, xs)
 
 
