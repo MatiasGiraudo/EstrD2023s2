@@ -214,9 +214,12 @@ swap :: (a, b) -> (b, a)
 swap(x, y) = (y, x)
 
 --2
--- Las funciones son polimorficas porque en su definicion no tiene ninguna restriccion de tipo
--- y no tiene alguna operacion de algun tipo especifico.
--- Es decir pueden trabajar con cualquier tipo de dato
+{-
+ Las funciones son polimorficas porque en su definicion no tiene ninguna restriccion de tipo
+  y no tiene alguna operacion de algun tipo especifico.
+ Es decir, las variables pueden tomar diferentes tipos segun los diferentes usos
+  siempre y cuando se usen en operaciones polimorficas.
+-}
 
 
 -- # 6 PATTERN MATCHING SOBRE LISTAS
