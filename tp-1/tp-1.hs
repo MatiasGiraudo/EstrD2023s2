@@ -71,7 +71,7 @@ empiezaConM Miercoles = True
 empiezaConM _         = False
 
 --c
-vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool:que
+vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
 vieneDespues a b = numeroDeDia a > numeroDeDia b
 
 numeroDeDia :: DiaDeSemana -> Int
