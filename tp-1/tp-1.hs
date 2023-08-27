@@ -194,7 +194,10 @@ unoSiCeroSino _    = 0
 
 --c
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
-juntarPokemon ((E _ pk1 pk2), (E _ pk3 pk4)) = pk1:pk2:pk3:pk4:[]
+juntarPokemon (e1, e2) = pokemonesDe e1 ++ pokemonesDe e2
+
+pokemonesDe :: Entrenador -> [Pokemon]
+pokemonesDe (E _ pk1 pk2) = pk1:pk2:[]
 
 -- # 5 FUNCIONES POLIMORFICAS
 --1
