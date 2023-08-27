@@ -107,8 +107,8 @@ yTambien _     a = a
 
 --d
 oBien :: Bool -> Bool -> Bool
-oBien False False = False
-oBien _     _     = True
+oBien True _ = True
+oBien _    a = a
 
 -- # 4 REGISTROS
 --1
