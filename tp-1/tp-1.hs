@@ -182,6 +182,7 @@ cantidadDeTipoPokemon :: Pokemon -> Pokemon -> TipoDePokemon -> Int
 cantidadDeTipoPokemon (Pk t1 _) (Pk t2 _) tp =    unoSiCeroSino (esMismoTipoPokemon t1 tp)
                                                       + unoSiCeroSino (esMismoTipoPokemon t2 tp)
 
+
 esMismoTipoPokemon :: TipoDePokemon -> TipoDePokemon -> Bool
 esMismoTipoPokemon Agua   Agua   = True
 esMismoTipoPokemon Fuego  Fuego  = True
