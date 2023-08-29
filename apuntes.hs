@@ -131,3 +131,6 @@ implica' :: Bool -> Bool -> Bool
 implica' True b = b
 implica' _    _ = True
 
+--TIPOS DE VARIABLES POLIMORFICAS
+-- Por si acaso me extiendo un poco para que quede claro! Seguro lo entendiste pero no está de más. Las variables pueden representar tipos diferentes pero para que haya esa posibilidad, las variables mismas deben ser distintas. O sea una función
+-- a -> a -> Int, por ejemplo, puede tomar DOS Strings, DOS Int, DOS Char, etc y devolver un Int, pero deben ser dos porque les pusiste a ambas a. Si la función ahora es a->b->Int, puede tomar DOS de algo, o UNO de cada uno. Necesitas que a y b sean distintas para poder admitir más variación de tipos.
