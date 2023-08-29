@@ -176,10 +176,10 @@ esTipoSuperior _      _     = False
 
 --b
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E _ pk1 pk2) = cantidadDelMismoTipoPokemon pk1 pk2 t
+cantidadDePokemonDe t (E _ pk1 pk2) = cantidadDeTipoPokemon pk1 pk2 t
 
-cantidadDelMismoTipoPokemon :: Pokemon -> Pokemon -> TipoDePokemon -> Int
-cantidadDelMismoTipoPokemon (Pk t1 _) (Pk t2 _) tp =    unoSiCeroSino (esMismoTipoPokemon t1 tp)
+cantidadDeTipoPokemon :: Pokemon -> Pokemon -> TipoDePokemon -> Int
+cantidadDeTipoPokemon (Pk t1 _) (Pk t2 _) tp =    unoSiCeroSino (esMismoTipoPokemon t1 tp)
                                                       + unoSiCeroSino (esMismoTipoPokemon t2 tp)
 
 esMismoTipoPokemon :: TipoDePokemon -> TipoDePokemon -> Bool
