@@ -128,7 +128,11 @@ losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
                     
 --5
 -- sinLosPrimeros :: Int -> [a] -> [a]
-
+--     --sinLosPrimeros 2 [6,4,8,2,9,7] --> [8,2,9,7]
+-- sinLosPrimeros _ [] = 
+-- sinLosPrimeros 0 xs = xs
+-- sinLosPrimeros n (x:xs) = n .. x .... sinLosPrimeros (n-1) xs
+--                         --2    6       [8,2,9,7]
 -- # 3 REGISTROS
 --1
 data Persona = P String Int
@@ -171,6 +175,34 @@ elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
                         else elMasViejo xs
 
 --2                        
+data TipoDePokemon = Agua | Fuego | Planta
+data Pokemon = ConsPokemon TipoDePokemon Int
+data Entrenador = ConsEntrenador String [Pokemon]
+
+--Generamos datos para pruebas
+bulbasaur  = ConsPokemon Agua   39
+charmander = ConsPokemon Fuego  67
+squirtle   = ConsPokemon Planta 43
+pikachu    = ConsPokemon Fuego  45
+
+-- y Entrenadores
+entrenadorPablo  = ConsEntrenador "Pablo"  [bulbasaur, charmander]
+entrenadorAndrea = ConsEntrenador "Andrea" [squirtle, pikachu, charmander]
+entrenadorJulian = ConsEntrenador "Julian" [bulbasaur, charmander, pikachu, squirtle]
+
+--a
+cantPokemon :: Entrenador -> Int
+cantPokemon (ConsEntrenador _ pks) = longitud pks
+
+--b
+-- cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+
+
+-- --c
+-- cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador
+
+-- --d
+-- esMaestroPokemon :: Entrenador -> Bool
 
 --3
 
