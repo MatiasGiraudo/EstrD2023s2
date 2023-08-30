@@ -7,23 +7,25 @@ sumatoria (n:ns) = n + sumatoria ns
 
 --2
 longitud :: [a] -> Int
+    --longitud ["Hola","como","estas","?"]
 longitud []     = 0
 longitud (_:xs) = 1 + longitud xs    
 
 --3
 sucesores :: [Int] -> [Int]
+    --sucesores [4,6,2,90]
 sucesores []     = []
 sucesores (n:ns) = n+1 : sucesores ns    
 
 --4
--- conjuncion :: [Bool] -> Bool
--- conjuncion []     = 
--- conjuncion (x:xs) = x .. conjuncion xs    
+conjuncion :: [Bool] -> Bool
+conjuncion []     = True
+conjuncion (x:xs) = x && conjuncion xs    
 
 -- --5
--- disyuncion :: [Bool] -> Bool
--- disyuncion [] = 
--- disyuncion (x:xs) = x .. disyuncion xs
+disyuncion :: [Bool] -> Bool
+disyuncion []     = False
+disyuncion (x:xs) = x || disyuncion xs
 
 --6
 aplanar :: [[a]] -> [a]
@@ -64,22 +66,30 @@ lasDeLongitudMayorA n (x:xs) = if(n < (longitud x))
                                 else lasDeLongitudMayorA n xs
 
 --11
--- agregarAlFinal :: [a] -> a -> [a]
---     --agregarAlFinal [1,2,3,4,5] 10
--- agregarAlFinal [] e = e:[]
--- agregarAlFinal (x:xs) e = e : agregarAlFinal xs e
+agregarAlFinal :: [a] -> a -> [a]
+    --agregarAlFinal [1,2,3,4,5] 10
+agregarAlFinal [] e     = e:[]
+agregarAlFinal (x:xs) e = x : agregarAlFinal xs e
 
 --12
--- agregar :: [a] -> [a] -> [a]
---     --agregar [1,2] [2,3,4]
--- agregar [] [] = 
--- agregar (x:xs) (y:ys) = x y .. agregar xs ys
+agregar :: [a] -> [a] -> [a]
+    --agregar [1,2] [6,7,9]
+agregar []     ys = ys 
+agregar (x:xs) ys = x : agregar xs ys
 
--- --13
--- reversa :: [a] -> [a]
+--13
+reversa :: [a] -> [a]
+    --reversa [1,2,3,4,5]
+reversa []     = []
+reversa (x:xs) = agregarAlFinal (reversa xs) x 
 
--- --14
--- zipMaximos :: [Int] -> [Int] -> [Int]
+--14
+zipMaximos :: [Int] -> [Int] -> [Int]
+zipMaximos []  ms = ms
+zipMaximos  ns [] = ns
+zipMaximos (n:ns) (m:ms) = if(n > m) 
+                            then n : zipMaximos ns ms    
+                            else m : zipMaximos ns ms  
 
 --15
 elMinimo :: Ord a => [a] -> a
@@ -92,7 +102,7 @@ elMinimo (x:xs) = if(x < elMinimo xs)
 -- # 2 RECURSION SOBRE NUMEROS
 --1
 factorial :: Int -> Int
-    --v 3*2*1
+    --factorial 3 = 6
 factorial 0 = 1
 factorial n = if(n < 0)
                 then error "El factorial no esta definido para numeros negativos"
@@ -100,7 +110,7 @@ factorial n = if(n < 0)
 
 --2
 cuentaRegresiva :: Int -> [Int]
-    --cuentaRegresiva 5 [5,4,3,2,1,0]
+    --cuentaRegresiva 5 = [5,4,3,2,1,0]
 cuentaRegresiva 0 = 0:[]
 cuentaRegresiva n = n : cuentaRegresiva (n-1)
 
@@ -110,11 +120,12 @@ repetir 0 _ = []
 repetir n e = e : repetir (n-1) e
 
 --4
--- losPrimeros :: Int -> [a] -> [a]
---     --losPrimeros 2 [4,6,7,2,3] --> [4,6]
--- losPrimeros 0 []     =
--- losPrimeros n (x:xs) = n x ... losPrimeros (n-1) xs    
-
+losPrimeros :: Int -> [a] -> [a]
+    --losPrimeros 3 [4,6,7,2,3] --> [4,6,7]
+losPrimeros 0 _      = []
+losPrimeros _ []     = []
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs    
+                    
 --5
 -- sinLosPrimeros :: Int -> [a] -> [a]
 
@@ -141,9 +152,15 @@ mayoresA n (x:xs) = if(edad x > n)
                         else mayoresA n xs
 
 --b
--- promedioEdad :: [Persona] -> Int
--- promedioEdad [] = error "La lista debe tener al menos una Persona"
--- promedioEdad (x:xs) = x ... promedioEdad xs                    
+promedioEdad :: [Persona] -> Int
+-- PRECOND: la lista no es vacía
+    --promedioEdad [marcos, matilda, pedro, nahuel]
+promedioEdad [] = error "No se puede sacar el promedio de una lista de Persona vacia"
+promedioEdad ps = div (sumarEdadTodos ps) (longitud ps)
+
+sumarEdadTodos :: [Persona] -> Int
+sumarEdadTodos [] = 0
+sumarEdadTodos (p:ps) = edad p + sumarEdadTodos ps    
 
 --c
 elMasViejo :: [Persona] -> Persona
@@ -152,6 +169,8 @@ elMasViejo [x]    = x
 elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
                         then x 
                         else elMasViejo xs
+
+--2                        
 
 --3
 
@@ -181,9 +200,9 @@ rolSeniorManag     = Management Senior proyecto1
 --[rolJuniorDev, rolSemiSeniorDev, rolSeniorDev, rolSeniorDev2, rolJuniorManag, rolSemiSeniorManag, rolSeniorManag]
 
 empresa = ConsEmpresa (rolJuniorDev : rolJuniorManag 
-            : rolSemiSeniorDev : rolSemiSeniorManag 
-            : rolSeniorDev : rolSeniorManag : [])
-
+                 : rolSemiSeniorDev : rolSemiSeniorManag 
+                 : rolSeniorDev     : rolSeniorManag 
+                 : rolSeniorDev2    : [])
 
 --a 
 proyectos :: Empresa -> [Proyecto]
@@ -214,31 +233,31 @@ proyecto (Management _ p) = p
 --b
 losDevSenior :: Empresa -> [Proyecto] -> Int
     --losDevSenior empresa [proyecto1, proyecto2]
-losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn(losSenior(devs rs)) ps)
+losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn(losRolesSenior(losDevs rs)) ps)
 
-devs :: [Rol] -> [Rol]
-devs [] = []
-devs (r:rs) = if esDev r 
-                    then r : devs rs
-                    else devs rs
+losDevs :: [Rol] -> [Rol]
+losDevs []     = []
+losDevs (r:rs) = if esRolDev r 
+                    then r : losDevs rs
+                    else losDevs rs
 
-esDev :: Rol -> Bool
-esDev (Developer _ _) = True
-esDev  _              = False
+esRolDev :: Rol -> Bool
+esRolDev (Developer _ _) = True
+esRolDev  _              = False
 
-losSenior :: [Rol] -> [Rol]
-losSenior [] = []
-losSenior (r:rs) = if esSenior r 
-                    then r : losSenior rs
-                    else losSenior rs
+losRolesSenior :: [Rol] -> [Rol]
+losRolesSenior []     = []
+losRolesSenior (r:rs) = if esRolSenior r 
+                    then r : losRolesSenior rs
+                    else losRolesSenior rs
 
-esSenior :: Rol -> Bool
-esSenior (Developer  s _) = esSeniorDe s
-esSenior (Management s _) = esSeniorDe s
+esRolSenior :: Rol -> Bool
+esRolSenior (Developer  s _) = esSenior s
+esRolSenior (Management s _) = esSenior s
 
-esSeniorDe :: Seniority -> Bool
-esSeniorDe Senior = True
-esSeniorDe _      = False
+esSenior :: Seniority -> Bool
+esSenior Senior = True
+esSenior _      = False
 
 
 trabajanEn :: [Rol] -> [Proyecto] -> [Rol]
