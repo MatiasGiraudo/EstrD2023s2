@@ -152,3 +152,114 @@ elMasViejo [x]    = x
 elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
                         then x 
                         else elMasViejo xs
+
+--3
+
+data Seniority = Junior | SemiSenior | Senior
+    deriving Show
+data Proyecto  = ConsProyecto String
+    deriving Show
+data Rol       = Developer Seniority Proyecto | Management Seniority Proyecto
+    deriving Show
+data Empresa   = ConsEmpresa [Rol]
+    deriving Show
+
+--Generamos datos para pruebas
+proyecto1 = ConsProyecto "Proyecto1"
+proyecto2 = ConsProyecto "Proyecto2"
+proyecto3 = ConsProyecto "Proyecto3"
+
+rolJuniorDev       = Developer Junior proyecto1
+rolSemiSeniorDev   = Developer SemiSenior proyecto1
+rolSeniorDev       = Developer Senior proyecto2
+rolSeniorDev2      = Developer Senior proyecto1
+
+rolJuniorManag     = Management Junior proyecto2
+rolSemiSeniorManag = Management SemiSenior proyecto2
+rolSeniorManag     = Management Senior proyecto1
+
+--[rolJuniorDev, rolSemiSeniorDev, rolSeniorDev, rolSeniorDev2, rolJuniorManag, rolSemiSeniorManag, rolSeniorManag]
+
+empresa = ConsEmpresa (rolJuniorDev : rolJuniorManag 
+            : rolSemiSeniorDev : rolSemiSeniorManag 
+            : rolSeniorDev : rolSeniorManag : [])
+
+
+--a 
+proyectos :: Empresa -> [Proyecto]
+    --proyectos empresa 
+proyectos (ConsEmpresa rs) = proyectosDeRoles rs
+
+proyectosDeRoles :: [Rol] -> [Proyecto]
+proyectosDeRoles []     = []
+proyectosDeRoles (r:rs) = agregarSinRepetir (proyecto r) (proyectosDeRoles rs)
+
+agregarSinRepetir :: Proyecto -> [Proyecto] -> [Proyecto]
+agregarSinRepetir p []     = p:[]
+agregarSinRepetir p (x:xs) = if proyectosIguales x p 
+                                then agregarSinRepetir p xs
+                                else x : agregarSinRepetir p xs
+
+proyectosIguales :: Proyecto -> Proyecto -> Bool
+proyectosIguales  p1 p2  = (nombreProyecto p1) == (nombreProyecto p2)                                  
+
+nombreProyecto :: Proyecto -> String
+nombreProyecto (ConsProyecto n) = n
+
+proyecto :: Rol -> Proyecto
+proyecto (Developer  _ p) = p 
+proyecto (Management _ p) = p 
+
+
+--b
+losDevSenior :: Empresa -> [Proyecto] -> Int
+    --losDevSenior empresa [proyecto1, proyecto2]
+losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn(losSenior(devs rs)) ps)
+
+devs :: [Rol] -> [Rol]
+devs [] = []
+devs (r:rs) = if esDev r 
+                    then r : devs rs
+                    else devs rs
+
+esDev :: Rol -> Bool
+esDev (Developer _ _) = True
+esDev  _              = False
+
+losSenior :: [Rol] -> [Rol]
+losSenior [] = []
+losSenior (r:rs) = if esSenior r 
+                    then r : losSenior rs
+                    else losSenior rs
+
+esSenior :: Rol -> Bool
+esSenior (Developer  s _) = esSeniorDe s
+esSenior (Management s _) = esSeniorDe s
+
+esSeniorDe :: Seniority -> Bool
+esSeniorDe Senior = True
+esSeniorDe _      = False
+
+
+trabajanEn :: [Rol] -> [Proyecto] -> [Rol]
+trabajanEn [] ps     = [] 
+trabajanEn (r:rs) ps = if rolTrabajaEn r ps
+                        then r : trabajanEn rs ps
+                        else trabajanEn rs ps 
+
+rolTrabajaEn :: Rol -> [Proyecto] -> Bool
+rolTrabajaEn r []     = False
+rolTrabajaEn r (p:ps) = perteneceA r p || rolTrabajaEn r ps                            
+
+perteneceA :: Rol -> Proyecto -> Bool
+perteneceA r p = proyectosIguales (proyecto r) p
+
+--c
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+cantQueTrabajanEn ps (ConsEmpresa rs) = longitud(trabajanEn rs ps)
+
+--d
+-- asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+-- asignadosPorProyecto e = asignadosA (roles e) (proyectos e)
+
+-- asignadosA :: [Rol] -> [Proyecto] -> [(Proyecto, Int)]4e
