@@ -45,9 +45,11 @@ pertenece e (x:xs) = if(e == x)
 apariciones :: Eq a => a -> [a] -> Int     
     --apariciones 'A' ['A', 'J', 'B', 'A']              
 apariciones _ []     = 0
-apariciones e (x:xs) = if(e == x)
-                        then 1 + apariciones e xs
-                        else apariciones e xs
+apariciones e (x:xs) = unoSi (e == x) + apariciones e xs
+
+unoSi :: Bool -> Int 
+unoSi True  = 1
+unoSi False = 0                        
 
 --9
 losMenoresA :: Int -> [Int] -> [Int]
@@ -85,6 +87,7 @@ reversa (x:xs) = agregarAlFinal (reversa xs) x
 
 --14
 zipMaximos :: [Int] -> [Int] -> [Int]
+    --zipMaximos [3,8,5] [9,1,1,8]
 zipMaximos []  ms = ms
 zipMaximos  ns [] = ns
 zipMaximos (n:ns) (m:ms) = if(n > m) 
@@ -116,33 +119,34 @@ cuentaRegresiva n = n : cuentaRegresiva (n-1)
 
 --3
 repetir :: Int -> a -> [a]
+    --repetir 3 "Hola mundo"
 repetir 0 _ = []
 repetir n e = e : repetir (n-1) e
 
 --4
 losPrimeros :: Int -> [a] -> [a]
-    --losPrimeros 3 [4,6,7,2,3] --> [4,6,7]
+    --losPrimeros 3 [4,6,7,2,3]
 losPrimeros 0 _      = []
 losPrimeros _ []     = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs    
                     
 --5
--- sinLosPrimeros :: Int -> [a] -> [a]
---     --sinLosPrimeros 2 [6,4,8,2,9,7] --> [8,2,9,7]
--- sinLosPrimeros _ [] = 
--- sinLosPrimeros 0 xs = xs
--- sinLosPrimeros n (x:xs) = n .. x .... sinLosPrimeros (n-1) xs
---                         --2    6       [8,2,9,7]
+sinLosPrimeros :: Int -> [a] -> [a]
+     --sinLosPrimeros 2 [6,4,8,2,9,7]
+sinLosPrimeros 0 xs     = xs
+sinLosPrimeros _ []     = []
+sinLosPrimeros n (x:xs) = sinLosPrimeros(n-1) xs
+
 -- # 3 REGISTROS
 --1
 data Persona = P String Int
                --Nombre Edad
     deriving Show
 
-marcos = P "Marcos" 20
+marcos  = P "Marcos"  20
 matilda = P "Matilda" 30
-pedro = P "Pedro" 58
-nahuel = P "Nahuel" 45
+pedro   = P "Pedro"   58
+nahuel  = P "Nahuel"  45
 
 edad :: Persona -> Int
 edad (P _ e) = e
@@ -169,6 +173,7 @@ sumarEdadTodos (p:ps) = edad p + sumarEdadTodos ps
 --c
 elMasViejo :: [Persona] -> Persona
 --PREC: La lista no esta vacía
+    --elMasViejo [marcos, matilda, pedro, nahuel]
 elMasViejo [x]    = x
 elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
                         then x 
@@ -176,7 +181,7 @@ elMasViejo (x:xs) = if(edad x > edad (elMasViejo xs))
 
 --2                        
 data TipoDePokemon = Agua | Fuego | Planta
-data Pokemon = ConsPokemon TipoDePokemon Int
+data Pokemon    = ConsPokemon TipoDePokemon Int
 data Entrenador = ConsEntrenador String [Pokemon]
 
 --Generamos datos para pruebas
@@ -186,23 +191,74 @@ squirtle   = ConsPokemon Planta 43
 pikachu    = ConsPokemon Fuego  45
 
 -- y Entrenadores
-entrenadorPablo  = ConsEntrenador "Pablo"  [bulbasaur, charmander]
-entrenadorAndrea = ConsEntrenador "Andrea" [squirtle, pikachu, charmander]
-entrenadorJulian = ConsEntrenador "Julian" [bulbasaur, charmander, pikachu, squirtle]
+entrenadorPablo     = ConsEntrenador "Pablo"  [bulbasaur, charmander]
+entrenadorAndrea    = ConsEntrenador "Andrea" [squirtle, pikachu, charmander]
+entrenadorJulian    = ConsEntrenador "Julian" [bulbasaur, charmander, pikachu, squirtle]
+entrenadorSoloAgua  = ConsEntrenador "SoloAgua" [bulbasaur]
+entrenadorSoloFuego = ConsEntrenador "SoloFuego" [charmander, pikachu]
 
 --a
 cantPokemon :: Entrenador -> Int
-cantPokemon (ConsEntrenador _ pks) = longitud pks
+    --cantPokemon entrenadorJulian
+cantPokemon e = longitud (pokemonesDe e)
+
+pokemonesDe :: Entrenador -> [Pokemon]
+pokemonesDe (ConsEntrenador _ pks) = pks
 
 --b
--- cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+    --cantPokemonDe Agua entrenadorJulian
+cantPokemonDe t e = cantidadPokemonDeTipoEn t (pokemonesDe e)
 
+cantidadPokemonDeTipoEn :: TipoDePokemon -> [Pokemon] -> Int 
+cantidadPokemonDeTipoEn _ []      = 0
+cantidadPokemonDeTipoEn t (p:pks) = unoSi(esMismoTipoPokemon t (tipoPokemon p)) 
+                                  + cantidadPokemonDeTipoEn t pks
 
--- --c
--- cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador
+esMismoTipoPokemon :: TipoDePokemon -> TipoDePokemon -> Bool
+esMismoTipoPokemon Agua   Agua   = True
+esMismoTipoPokemon Fuego  Fuego  = True
+esMismoTipoPokemon Planta Planta = True
+esMismoTipoPokemon _      _      = False 
 
--- --d
--- esMaestroPokemon :: Entrenador -> Bool
+tipoPokemon :: Pokemon -> TipoDePokemon 
+tipoPokemon (ConsPokemon t _) = t
+
+--c
+cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+    --cuantosDeTipo_De_LeGananATodosLosDe_ Agua entrenadorSoloAgua entrenadorSoloFuego
+cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cantidadDePkGanan t (pokemonesDe e2) (pokemonesDe e1)
+
+cantidadDePkGanan :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
+cantidadDePkGanan _ _           []      = 0
+cantidadDePkGanan t pksEnemigos (p:pks) =  if puedeVencerATodos p pksEnemigos
+                                            then unoSi (esMismoTipoPokemon t (tipoPokemon p)) + cantidadDePkGanan t pksEnemigos pks
+                                            else cantidadDePkGanan t pksEnemigos pks
+
+puedeVencerATodos :: Pokemon -> [Pokemon] -> Bool
+puedeVencerATodos _ [] = True
+puedeVencerATodos a (p:pks) =  puedeVencer (tipoPokemon a) (tipoPokemon p) && puedeVencerATodos a pks
+
+puedeVencer :: TipoDePokemon -> TipoDePokemon -> Bool
+puedeVencer Agua   Fuego  = True
+puedeVencer Fuego  Planta = True
+puedeVencer Planta Agua   = True
+puedeVencer _      _      = False
+
+--d
+esMaestroPokemon :: Entrenador -> Bool
+esMaestroPokemon e = poseeAlMenosPkCadaTipo (pokemonesDe e)
+
+poseeAlMenosPkCadaTipo :: [Pokemon] -> Bool
+poseeAlMenosPkCadaTipo pks = (hayAlmenosUnPkDe pks Agua) &&
+                             (hayAlmenosUnPkDe pks Fuego) &&
+                             (hayAlmenosUnPkDe pks Planta) 
+
+hayAlmenosUnPkDe :: [Pokemon] -> TipoDePokemon -> Bool
+hayAlmenosUnPkDe [] _      = False
+hayAlmenosUnPkDe (p:pks) t = esMismoTipoPokemon (tipoPokemon p) t 
+                             || hayAlmenosUnPkDe pks t                                 
+
 
 --3
 
@@ -280,8 +336,8 @@ esRolDev  _              = False
 losRolesSenior :: [Rol] -> [Rol]
 losRolesSenior []     = []
 losRolesSenior (r:rs) = if esRolSenior r 
-                    then r : losRolesSenior rs
-                    else losRolesSenior rs
+                         then r : losRolesSenior rs
+                         else losRolesSenior rs
 
 esRolSenior :: Rol -> Bool
 esRolSenior (Developer  s _) = esSenior s
@@ -310,7 +366,19 @@ cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 cantQueTrabajanEn ps (ConsEmpresa rs) = longitud(trabajanEn rs ps)
 
 --d
--- asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
--- asignadosPorProyecto e = asignadosA (roles e) (proyectos e)
 
--- asignadosA :: [Rol] -> [Proyecto] -> [(Proyecto, Int)]4e
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+    --asignadosPorProyecto empresa 
+asignadosPorProyecto (ConsEmpresa rs) = contarPersonasPorProyecto rs
+
+contarPersonasPorProyecto :: [Rol] -> [(Proyecto, Int)]
+contarPersonasPorProyecto rs = contarPorProyecto rs (proyectosDeRoles rs) 
+
+contarPorProyecto :: [Rol] -> [Proyecto] -> [(Proyecto, Int)]
+contarPorProyecto _  []     = []
+contarPorProyecto rs (p:ps) = (p, contarPersonasEnProyecto rs p ) : contarPorProyecto rs ps
+
+contarPersonasEnProyecto ::  [Rol] -> Proyecto -> Int
+contarPersonasEnProyecto []     _ = 0
+contarPersonasEnProyecto (r:rs) p = unoSi (proyectosIguales (proyecto r) p) + contarPersonasEnProyecto rs p
+
