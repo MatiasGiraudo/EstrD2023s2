@@ -106,20 +106,24 @@ hayTesoroEn n (Cofre objs c) = tieneTesoro objs || hayTesoroEn (n-1) c
 
 -- # 2 TIPOS ARBOREOS
 --2.1
-data Tree a = EmptyT | NodeT Int (Tree a) (Tree a)
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show
 
 
-data TreeGen a = EmptyGen | NodeGen a (TreeGen a) (TreeGen a)
-    deriving Show
 
 
+arbol0 :: Tree Int 
 arbol0 = NodeT 12 EmptyT EmptyT 
 
+arbol1 :: Tree Int 
 arbol1 = NodeT 12 
             (NodeT 10  EmptyT (NodeT 20 EmptyT EmptyT) ) 
             (NodeT 13 EmptyT EmptyT)
         
+arbol2 :: Tree String
+arbol2 = NodeT "Escudo" 
+            (NodeT "Escudo"  EmptyT (NodeT "VaraMagica" EmptyT EmptyT) ) 
+            (NodeT "Maza" EmptyT EmptyT)        
 --1
 sumarT :: Tree Int -> Int
 sumarT EmptyT          = 0
@@ -136,21 +140,25 @@ mapDobleT EmptyT          = EmptyT
 mapDobleT (NodeT n t1 t2) = (NodeT (n*2) (mapDobleT t1) (mapDobleT t2))  
 
 --4
--- perteneceT :: Eq a => a -> TreeGen a -> Bool
--- perteneceT _ EmptyGen          = False
--- perteneceT x (NodeGen y t1 t2) = (elementosIguales x y) || (perteneceT t1) || (perteneceT t2)
+perteneceT :: Eq a => a -> Tree a -> Bool
+perteneceT _ EmptyT         = False
+perteneceT e (NodeT y t1 t2) = (elementosIguales e y) || (perteneceT e t1) || (perteneceT e t2)
 
 elementosIguales :: Eq a => a -> a -> Bool
 elementosIguales x y = if(x == y) then True else False
 
 --5
-aparicionesT :: Eq a => a -> TreeGen a -> Int
-aparicionesT _ EmptyGen          = 0
-aparicionesT e (NodeGen x t1 t2) = unoSi (elementosIguales e x) + (aparicionesT t1) + (aparicionesT t2)
+aparicionesT :: Eq a => a -> Tree a -> Int
+aparicionesT _ EmptyT          = 0
+aparicionesT e (NodeT x t1 t2) = unoSi (elementosIguales e x) + (aparicionesT e t1) + (aparicionesT e t2)
 
 --6
-leaves :: TreeGen a -> [a]
-leaves EmptyGen          = []
-leaves (NodeGen x t1 t2) = x : leaves t1 ++ leaves t2  
+leaves :: Tree a -> [a]
+leaves EmptyT          = []
+leaves (NodeT x t1 t2) = x : leaves t1 ++ leaves t2  
+--CORREGIR
+
+
+
 
 
