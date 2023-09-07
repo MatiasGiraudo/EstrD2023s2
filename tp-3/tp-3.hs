@@ -37,7 +37,11 @@ poner :: Color -> Celda -> Celda
 poner col cel = Bolita col cel
 
 --c
--- sacar :: Color -> Celda -> Celda 
+sacar :: Color -> Celda -> Celda
+sacar _ CeldaVacia     = CeldaVacia
+sacar c (Bolita col cel) = if esMismoColor c col 
+                            then cel 
+                            else Bolita col (sacar c cel)
 
 --d
 ponerN :: Int -> Color -> Celda -> Celda
@@ -68,8 +72,8 @@ caminoSinTesoro = Nada (
 --a
 hayTesoro :: Camino -> Bool
 hayTesoro Fin            = False
-hayTesoro (Cofre objs c) = tieneTesoro objs || hayTesoro c
 hayTesoro (Nada c)       = hayTesoro c
+hayTesoro (Cofre objs c) = tieneTesoro objs || hayTesoro c
 
 tieneTesoro :: [Objeto] -> Bool
 tieneTesoro []     = False
@@ -83,8 +87,7 @@ esTesoro _      = False
 pasosHastaTesoro :: Camino -> Int
 pasosHastaTesoro Fin            = 0
 pasosHastaTesoro (Nada c)       = 1 + pasosHastaTesoro c
-pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs) then pasosHastaTesoro c else 1 + pasosHastaTesoro c     
---CORREGIR
+pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs) then 0 else 1 + pasosHastaTesoro c     
 
 --c
 hayTesoroEn :: Int -> Camino -> Bool
@@ -95,22 +98,20 @@ hayTesoroEn n (Cofre objs c) = tieneTesoro objs || hayTesoroEn (n-1) c
 --Consultar si hay que evaluar el caso donde hay cero pasos-----
 
 --d
--- alMenosNTesoros :: Int -> Camino -> Bool
--- alMenosNTesoros 0 c              =
--- alMenosNTesoros n Fin            = 
--- alMenosNTesoros n (Nada c)       = 
--- alMenosNTesoros n (Cofre objs c) = ... n ... objs .... alMenosNTesoros (n-1) c   
+alMenosNTesoros :: Int -> Camino -> Bool
+alMenosNTesoros n Fin            = n <= 0
+alMenosNTesoros n (Nada c)       = alMenosNTesoros n c
+alMenosNTesoros n (Cofre objs c) = alMenosNTesoros (n-(cantidadTesorosEn objs)) c
 
---e
--- cantTesorosEntre :: Int -> Int -> Camino -> Int
+
+cantidadTesorosEn :: [Objeto] -> Int 
+cantidadTesorosEn []         = 0
+cantidadTesorosEn (obj:objs) = unoSi (esTesoro obj) + cantidadTesorosEn objs
 
 -- # 2 TIPOS ARBOREOS
 --2.1
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
     deriving Show
-
-
-
 
 arbol0 :: Tree Int 
 arbol0 = NodeT 12 EmptyT EmptyT 
@@ -155,8 +156,104 @@ aparicionesT e (NodeT x t1 t2) = unoSi (elementosIguales e x) + (aparicionesT e 
 --6
 leaves :: Tree a -> [a]
 leaves EmptyT          = []
-leaves (NodeT x t1 t2) = x : leaves t1 ++ leaves t2  
---CORREGIR
+leaves (NodeT x t1 t2) = if (esVacia t1 && esVacia t2) 
+                          then [x] 
+                          else leaves t1 ++ leaves t2 
+
+esVacia :: Tree a -> Bool
+esVacia EmptyT = True
+esVacia _      = False
+
+--7
+heightT :: Tree a -> Int
+heightT EmptyT          = 0
+heightT (NodeT x t1 t2) = 1 + max (heightT t1) (heightT t2) 
+
+--8 
+mirrorT :: Tree a -> Tree a
+mirrorT EmptyT          = EmptyT
+mirrorT (NodeT x t1 t2) = NodeT x (mirrorT t2) (mirrorT t1)
+
+--9
+toList :: Tree a -> [a]
+toList EmptyT          = []
+toList (NodeT x t1 t2) = toList t1 ++ [x] ++ toList t2 
+
+--10
+levelN :: Int -> Tree a -> [a]
+levelN _ EmptyT          = []
+levelN n (NodeT x t1 t2) = if n == 0 
+                            then [x]
+                            else levelN (n-1) t1 ++ levelN (n-1) t2
+
+--11
+listPerLevel :: Tree a -> [[a]]
+listPerLevel EmptyT          = []
+listPerLevel (NodeT x t1 t2) = [x] : nivelar (listPerLevel t1) (listPerLevel t2)
+
+nivelar :: [[a]] -> [[a]] -> [[a]]
+nivelar []       yss      = yss
+nivelar xss      []       = xss
+nivelar (xs:xss) (ys:yss) = (xs ++ ys) : nivelar xss yss
+
+--12
+ramaMasLarga :: Tree a -> [a]
+ramaMasLarga EmptyT          = []
+ramaMasLarga (NodeT x t1 t2) = x : elegirLaMasLarga (ramaMasLarga t1) (ramaMasLarga t2)
+
+elegirLaMasLarga :: [a] -> [a] -> [a]
+elegirLaMasLarga xs ys = if length xs > length ys
+                            then xs
+                            else ys
+
+--13
+todosLosCaminos :: Tree a -> [[a]]
+todosLosCaminos EmptyT          = []
+todosLosCaminos (NodeT x t1 t2) = [x] : agregarACada x (todosLosCaminos t1)
+                                     ++ agregarACada x (todosLosCaminos t2)
+
+agregarACada :: a -> [[a]] -> [[a]]
+agregarACada _ []       = []
+agregarACada x (ys:yss) = (x : ys) : agregarACada x yss      
+
+-- # 2 EXPRESIONES ARITMETICAS 
+data ExpA = Valor Int | Sum ExpA ExpA | Prod ExpA ExpA | Neg ExpA
+    deriving Show
+
+numero1 = Valor 5
+numero2 = Valor 2
+
+operacionSuma1 = Sum numero1 numero2
+operacionSuma2 = Sum operacionSuma1 numero1
+
+operacionProd = Prod numero1 numero2
+
+operacionNeg = Neg numero2
+
+--1
+eval :: ExpA -> Int
+eval (Valor n)    = n
+eval (Sum n m)  = (eval n) + (eval m)
+eval (Prod n m) = (eval n) * (eval m)
+eval (Neg n)    = -(eval n)
+
+--2
+-- a) 0 + x = x + 0 = x
+-- b) 0 * x = x * 0 = 0
+-- c) 1 * x = x * 1 = x
+-- d) - (- x) = x
+
+
+-- simplificar :: ExpA -> ExpA
+-- simplificar (Sum 0 n)     = simplificar n
+-- simplificar (Sum n 0)     = simplificar n
+-- simplificar (Prod 0 _)    = Valor 0
+-- simplificar (Prod _ 0)    = Valor 0
+-- simplificar (Prod 1 n)    = simplificar n
+-- simplificar (Prod n 1)    = simplificar n
+-- simplificar (Neg (Neg n)) = simplificar n
+-- simplificar n             = n
+
 
 
 
