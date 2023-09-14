@@ -91,9 +91,7 @@ zipMaximos :: [Int] -> [Int] -> [Int]
     --zipMaximos [3,8,5] [9,1,1,8]
 zipMaximos []  ms = ms
 zipMaximos  ns [] = ns
-zipMaximos (n:ns) (m:ms) = if(n > m) 
-                            then n : zipMaximos ns ms    
-                            else m : zipMaximos ns ms  
+zipMaximos (n:ns) (m:ms) = max n m : zipMaximos ns ms  
 
 --15
 elMinimo :: Ord a => [a] -> a
