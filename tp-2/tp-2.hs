@@ -37,9 +37,10 @@ aplanar (x:xs) = x ++ aplanar xs
 pertenece :: Eq a => a -> [a] -> Bool
     --pertenece 4 [1,2,3,4,5,6]
 pertenece _ []     = False
-pertenece e (x:xs) = if(e == x)
-                        then True
-                        else  pertenece e xs
+pertenece e (x:xs) = esMismoElemento e x || pertenece e xs
+
+esMismoElemento :: Eq a => a -> a -> Bool 
+esMismoElemento e1 e2 = e1 == e2                       
 
 --8
 apariciones :: Eq a => a -> [a] -> Int     
