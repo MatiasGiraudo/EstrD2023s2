@@ -106,6 +106,7 @@ elMinimo (x:xs) = if(x < elMinimo xs)
 -- # 2 RECURSION SOBRE NUMEROS
 --1
 factorial :: Int -> Int
+--PREC: El numero n no es negativo.
     --factorial 3 = 6
 factorial 0 = 1
 factorial n = if(n < 0)
