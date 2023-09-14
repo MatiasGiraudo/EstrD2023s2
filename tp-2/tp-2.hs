@@ -96,7 +96,9 @@ zipMaximos (n:ns) (m:ms) = max n m : zipMaximos ns ms
 --15
 elMinimo :: Ord a => [a] -> a
 --PREC: La lista no esta vacía
+    --elMinimo [2,6,3,4,78]
 elMinimo []     = error "La lista no puede estar vacía"
+elMinimo (x:[]) = x
 elMinimo (x:xs) = if(x < elMinimo xs)
                     then x
                     else elMinimo xs    
