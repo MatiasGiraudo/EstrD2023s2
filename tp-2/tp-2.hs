@@ -109,15 +109,21 @@ factorial :: Int -> Int
 --PREC: El numero n no es negativo.
     --factorial 3 = 6
 factorial 0 = 1
-factorial n = if(n < 0)
+factorial n = if esNumeroNegativo n
                 then error "El factorial no esta definido para numeros negativos"
                 else n * factorial (n-1)
+
+esNumeroNegativo :: Int -> Bool
+esNumeroNegativo n = n < 0                
 
 --2
 cuentaRegresiva :: Int -> [Int]
     --cuentaRegresiva 5 = [5,4,3,2,1,0]
-cuentaRegresiva 0 = 0:[]
-cuentaRegresiva n = n : cuentaRegresiva (n-1)
+cuentaRegresiva 0 = []
+cuentaRegresiva n = if esNumeroNegativo n
+                     then []
+                     else n : cuentaRegresiva (n-1) 
+
 
 --3
 repetir :: Int -> a -> [a]
