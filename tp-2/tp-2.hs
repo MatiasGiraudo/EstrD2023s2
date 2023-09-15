@@ -301,17 +301,18 @@ rolJuniorDev       = Developer Junior proyecto1
 rolSemiSeniorDev   = Developer SemiSenior proyecto1
 rolSeniorDev       = Developer Senior proyecto2
 rolSeniorDev2      = Developer Senior proyecto1
+rolSeniorDev3      = Developer Senior proyecto1
+rolSeniorDev4      = Developer Senior proyecto3
 
 rolJuniorManag     = Management Junior proyecto2
 rolSemiSeniorManag = Management SemiSenior proyecto2
 rolSeniorManag     = Management Senior proyecto1
 
---[rolJuniorDev, rolSemiSeniorDev, rolSeniorDev, rolSeniorDev2, rolJuniorManag, rolSemiSeniorManag, rolSeniorManag]
-
 empresa = ConsEmpresa (rolJuniorDev : rolJuniorManag 
                  : rolSemiSeniorDev : rolSemiSeniorManag 
                  : rolSeniorDev     : rolSeniorManag 
-                 : rolSeniorDev2    : [])
+                 : rolSeniorDev2    : rolSeniorDev3 
+                 : rolSeniorDev4    : [])
 
 --a 
 proyectos :: Empresa -> [Proyecto]
@@ -323,7 +324,7 @@ proyectosDeRoles []     = []
 proyectosDeRoles (r:rs) = agregarSinRepetir (proyecto r) (proyectosDeRoles rs)
 
 agregarSinRepetir :: Proyecto -> [Proyecto] -> [Proyecto]
-agregarSinRepetir p []     = p:[]
+agregarSinRepetir _ []     = []
 agregarSinRepetir p (x:xs) = if proyectosIguales x p 
                                 then agregarSinRepetir p xs
                                 else x : agregarSinRepetir p xs
@@ -342,23 +343,24 @@ proyecto (Management _ p) = p
 --b
 losDevSenior :: Empresa -> [Proyecto] -> Int
     --losDevSenior empresa [proyecto1, proyecto2]
-losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn(losRolesSenior(losDevs rs)) ps)
+losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn rs ps)
 
-losDevs :: [Rol] -> [Rol]
-losDevs []     = []
-losDevs (r:rs) = if esRolDev r 
-                    then r : losDevs rs
-                    else losDevs rs
+trabajanEn :: [Rol] -> [Proyecto] -> [Rol]
+trabajanEn [] ps     = [] 
+trabajanEn (r:rs) ps = if rolTrabajaEn r ps && esRolDev r && esRolSenior r
+                        then r : trabajanEn rs ps
+                        else trabajanEn rs ps 
+
+rolTrabajaEn :: Rol -> [Proyecto] -> Bool
+rolTrabajaEn r []     = False
+rolTrabajaEn r (p:ps) = perteneceA r p || rolTrabajaEn r ps                            
+
+perteneceA :: Rol -> Proyecto -> Bool
+perteneceA r p = proyectosIguales (proyecto r) p
 
 esRolDev :: Rol -> Bool
 esRolDev (Developer _ _) = True
 esRolDev  _              = False
-
-losRolesSenior :: [Rol] -> [Rol]
-losRolesSenior []     = []
-losRolesSenior (r:rs) = if esRolSenior r 
-                         then r : losRolesSenior rs
-                         else losRolesSenior rs
 
 esRolSenior :: Rol -> Bool
 esRolSenior (Developer  s _) = esSenior s
@@ -369,18 +371,6 @@ esSenior Senior = True
 esSenior _      = False
 
 
-trabajanEn :: [Rol] -> [Proyecto] -> [Rol]
-trabajanEn [] ps     = [] 
-trabajanEn (r:rs) ps = if rolTrabajaEn r ps
-                        then r : trabajanEn rs ps
-                        else trabajanEn rs ps 
-
-rolTrabajaEn :: Rol -> [Proyecto] -> Bool
-rolTrabajaEn r []     = False
-rolTrabajaEn r (p:ps) = perteneceA r p || rolTrabajaEn r ps                            
-
-perteneceA :: Rol -> Proyecto -> Bool
-perteneceA r p = proyectosIguales (proyecto r) p
 
 --c
 cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
