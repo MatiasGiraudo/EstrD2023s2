@@ -370,19 +370,17 @@ esSenior :: Seniority -> Bool
 esSenior Senior = True
 esSenior _      = False
 
-
-
 --c
 cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
-cantQueTrabajanEn []     _                    = 0
-cantQueTrabajanEn _      (ConsEmpresa [])     = 0 
-cantQueTrabajanEn (p:ps) (ConsEmpresa (r:rs)) = unoSi(perteneceA r  p)  + cantQueTrabajanEn ps (ConsEmpresa rs)    
+cantQueTrabajanEn p (ConsEmpresa rs) = contRoles p rs
 
+contRoles :: [Proyecto] -> [Rol] -> Int
+contRoles []     _  = 0
+contRoles (p:ps) rs = contarPersonasEnProyecto p rs + contRoles ps rs
 
-miZip :: [a] -> [b] -> [(a,b)]
-miZip []     _      = [] 
-miZip _      []     = [] 
-miZip (x:xs) (y:ys) = (x,y) : miZip xs ys
+contarPersonasEnProyecto ::  Proyecto -> [Rol] -> Int
+contarPersonasEnProyecto _ []     = 0
+contarPersonasEnProyecto p (r:rs) = unoSi (proyectosIguales p (proyecto r)) + contarPersonasEnProyecto p rs
 
 --d
 
@@ -394,8 +392,4 @@ contarPorProyecto :: [Proyecto] -> [Rol] -> [(Proyecto, Int)]
 contarPorProyecto []     _  = []
 contarPorProyecto _      [] = []
 contarPorProyecto (p:ps) rs = (p, contarPersonasEnProyecto p rs) : contarPorProyecto ps rs
-
-contarPersonasEnProyecto ::  Proyecto -> [Rol] -> Int
-contarPersonasEnProyecto _ []     = 0
-contarPersonasEnProyecto p (r:rs) = unoSi (proyectosIguales p (proyecto r)) + contarPersonasEnProyecto p rs
 
