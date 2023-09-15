@@ -324,10 +324,10 @@ proyectosDeRoles []     = []
 proyectosDeRoles (r:rs) = agregarSinRepetir (proyecto r) (proyectosDeRoles rs)
 
 agregarSinRepetir :: Proyecto -> [Proyecto] -> [Proyecto]
-agregarSinRepetir _ []     = []
-agregarSinRepetir p (x:xs) = if proyectosIguales x p 
-                                then agregarSinRepetir p xs
-                                else x : agregarSinRepetir p xs
+agregarSinRepetir p []     = p:[]
+agregarSinRepetir p (x:xs) = if proyectosIguales p x 
+                              then xs 
+                              else  x : agregarSinRepetir p xs
 
 proyectosIguales :: Proyecto -> Proyecto -> Bool
 proyectosIguales  p1 p2  = (nombreProyecto p1) == (nombreProyecto p2)                                  
@@ -374,7 +374,15 @@ esSenior _      = False
 
 --c
 cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
-cantQueTrabajanEn ps (ConsEmpresa rs) = longitud(trabajanEn rs ps)
+cantQueTrabajanEn []     _                    = 0
+cantQueTrabajanEn _      (ConsEmpresa [])     = 0 
+cantQueTrabajanEn (p:ps) (ConsEmpresa (r:rs)) = unoSi(perteneceA r  p)  + cantQueTrabajanEn ps (ConsEmpresa rs)    
+
+
+miZip :: [a] -> [b] -> [(a,b)]
+miZip []     _      = [] 
+miZip _      []     = [] 
+miZip (x:xs) (y:ys) = (x,y) : miZip xs ys
 
 --d
 
