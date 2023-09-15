@@ -197,12 +197,14 @@ bulbasaur  = ConsPokemon Agua   39
 charmander = ConsPokemon Fuego  67
 squirtle   = ConsPokemon Planta 43
 pikachu    = ConsPokemon Fuego  45
+gyarados   = ConsPokemon Agua   50
+
 
 -- y Entrenadores
 entrenadorPablo     = ConsEntrenador "Pablo"  [bulbasaur, charmander]
 entrenadorAndrea    = ConsEntrenador "Andrea" [squirtle, pikachu, charmander]
 entrenadorJulian    = ConsEntrenador "Julian" [bulbasaur, charmander, pikachu, squirtle]
-entrenadorSoloAgua  = ConsEntrenador "SoloAgua" [bulbasaur]
+entrenadorSoloAgua  = ConsEntrenador "SoloAgua" [bulbasaur, gyarados]
 entrenadorSoloFuego = ConsEntrenador "SoloFuego" [charmander, pikachu]
 
 --a
@@ -239,19 +241,30 @@ cuantosDeTipo_De_LeGananATodosLosDe_ t e1 e2 = cantidadDePkGanan t (pokemonesDe 
 
 cantidadDePkGanan :: TipoDePokemon -> [Pokemon] -> [Pokemon] -> Int
 cantidadDePkGanan _ _           []      = 0
-cantidadDePkGanan t pksEnemigos (p:pks) =  if puedeVencerATodos p pksEnemigos
-                                            then unoSi (esMismoTipoPokemon t (tipoPokemon p)) + cantidadDePkGanan t pksEnemigos pks
-                                            else cantidadDePkGanan t pksEnemigos pks
+cantidadDePkGanan t pksEnemigos (p:pks) = unoSi (esMismoTipoPokemon t (tipoPokemon p) && puedeVencerATodos p pksEnemigos) + cantidadDePkGanan t pksEnemigos pks
+                                            
 
 puedeVencerATodos :: Pokemon -> [Pokemon] -> Bool
-puedeVencerATodos _ [] = True
-puedeVencerATodos a (p:pks) =  puedeVencer (tipoPokemon a) (tipoPokemon p) && puedeVencerATodos a pks
+puedeVencerATodos _ []      = True
+puedeVencerATodos a (p:pks) = puedeVencer (tipoPokemon a) (tipoPokemon p) && puedeVencerATodos a pks
 
 puedeVencer :: TipoDePokemon -> TipoDePokemon -> Bool
-puedeVencer Agua   Fuego  = True
-puedeVencer Fuego  Planta = True
-puedeVencer Planta Agua   = True
-puedeVencer _      _      = False
+puedeVencer Agua   t2 = tipoAguaPuedeVencer t2
+puedeVencer Fuego  t2 = tipoFuegoPuedeVencer t2
+puedeVencer Planta t2 = tipoPlantaPuedeVencer t2
+puedeVencer _      _  = False
+
+tipoAguaPuedeVencer :: TipoDePokemon -> Bool
+tipoAguaPuedeVencer Fuego = True
+tipoAguaPuedeVencer _     = False
+
+tipoFuegoPuedeVencer :: TipoDePokemon -> Bool
+tipoFuegoPuedeVencer Planta = True
+tipoFuegoPuedeVencer _      = False
+
+tipoPlantaPuedeVencer :: TipoDePokemon -> Bool
+tipoPlantaPuedeVencer Agua = True
+tipoPlantaPuedeVencer _    = False
 
 --d
 esMaestroPokemon :: Entrenador -> Bool
