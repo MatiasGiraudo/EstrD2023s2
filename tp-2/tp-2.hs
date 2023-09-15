@@ -388,16 +388,14 @@ miZip (x:xs) (y:ys) = (x,y) : miZip xs ys
 
 asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
     --asignadosPorProyecto empresa 
-asignadosPorProyecto (ConsEmpresa rs) = contarPersonasPorProyecto rs
+asignadosPorProyecto (ConsEmpresa rs) = contarPorProyecto (proyectosDeRoles rs) rs
 
-contarPersonasPorProyecto :: [Rol] -> [(Proyecto, Int)]
-contarPersonasPorProyecto rs = contarPorProyecto rs (proyectosDeRoles rs) 
+contarPorProyecto :: [Proyecto] -> [Rol] -> [(Proyecto, Int)]
+contarPorProyecto []     _  = []
+contarPorProyecto _      [] = []
+contarPorProyecto (p:ps) rs = (p, contarPersonasEnProyecto p rs) : contarPorProyecto ps rs
 
-contarPorProyecto :: [Rol] -> [Proyecto] -> [(Proyecto, Int)]
-contarPorProyecto _  []     = []
-contarPorProyecto rs (p:ps) = (p, contarPersonasEnProyecto rs p ) : contarPorProyecto rs ps
-
-contarPersonasEnProyecto ::  [Rol] -> Proyecto -> Int
-contarPersonasEnProyecto []     _ = 0
-contarPersonasEnProyecto (r:rs) p = unoSi (proyectosIguales (proyecto r) p) + contarPersonasEnProyecto rs p
+contarPersonasEnProyecto ::  Proyecto -> [Rol] -> Int
+contarPersonasEnProyecto _ []     = 0
+contarPersonasEnProyecto p (r:rs) = unoSi (proyectosIguales p (proyecto r)) + contarPersonasEnProyecto p rs
 
