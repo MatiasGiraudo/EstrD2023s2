@@ -245,26 +245,18 @@ cantidadDePkGanan t pksEnemigos (p:pks) = unoSi (esMismoTipoPokemon t (tipoPokem
                                             
 
 puedeVencerATodos :: Pokemon -> [Pokemon] -> Bool
-puedeVencerATodos _ []      = True
-puedeVencerATodos a (p:pks) = puedeVencer (tipoPokemon a) (tipoPokemon p) && puedeVencerATodos a pks
+puedeVencerATodos _ []       = True
+puedeVencerATodos pk (p:pks) = puedeVencer pk p && puedeVencerATodos pk pks
 
-puedeVencer :: TipoDePokemon -> TipoDePokemon -> Bool
-puedeVencer Agua   t2 = tipoAguaPuedeVencer t2
-puedeVencer Fuego  t2 = tipoFuegoPuedeVencer t2
-puedeVencer Planta t2 = tipoPlantaPuedeVencer t2
-puedeVencer _      _  = False
+puedeVencer :: Pokemon -> Pokemon -> Bool
+puedeVencer (ConsPokemon t _) (ConsPokemon t2 _) = esTipoSuperior t t2
 
-tipoAguaPuedeVencer :: TipoDePokemon -> Bool
-tipoAguaPuedeVencer Fuego = True
-tipoAguaPuedeVencer _     = False
 
-tipoFuegoPuedeVencer :: TipoDePokemon -> Bool
-tipoFuegoPuedeVencer Planta = True
-tipoFuegoPuedeVencer _      = False
-
-tipoPlantaPuedeVencer :: TipoDePokemon -> Bool
-tipoPlantaPuedeVencer Agua = True
-tipoPlantaPuedeVencer _    = False
+esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
+esTipoSuperior Agua Fuego   = True
+esTipoSuperior Fuego Planta = True
+esTipoSuperior Planta Agua  = True
+esTipoSuperior _      _     = False
 
 --d
 esMaestroPokemon :: Entrenador -> Bool
