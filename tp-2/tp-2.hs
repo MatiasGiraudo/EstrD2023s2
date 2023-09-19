@@ -331,20 +331,18 @@ proyecto :: Rol -> Proyecto
 proyecto (Developer  _ p) = p 
 proyecto (Management _ p) = p 
 
-
 --b
 losDevSenior :: Empresa -> [Proyecto] -> Int
     --losDevSenior empresa [proyecto1, proyecto2]
-losDevSenior (ConsEmpresa rs) ps = longitud(trabajanEn rs ps)
+losDevSenior (ConsEmpresa rs) ps = cantDevSeniorTrabajanEn rs ps
 
-trabajanEn :: [Rol] -> [Proyecto] -> [Rol]
-trabajanEn [] ps     = [] 
-trabajanEn (r:rs) ps = if rolTrabajaEn r ps && esRolDev r && esRolSenior r
-                        then r : trabajanEn rs ps
-                        else trabajanEn rs ps 
+cantDevSeniorTrabajanEn :: [Rol] -> [Proyecto] -> Int
+cantDevSeniorTrabajanEn [] _      = 0 
+cantDevSeniorTrabajanEn (r:rs) ps = unoSi (rolTrabajaEn r ps && esRolDev r && esRolSenior r)
+                                    + cantDevSeniorTrabajanEn rs ps 
 
 rolTrabajaEn :: Rol -> [Proyecto] -> Bool
-rolTrabajaEn r []     = False
+rolTrabajaEn _ []     = False
 rolTrabajaEn r (p:ps) = perteneceA r p || rolTrabajaEn r ps                            
 
 perteneceA :: Rol -> Proyecto -> Bool
