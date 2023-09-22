@@ -53,6 +53,7 @@ data Objeto = Cacharro | Tesoro
 data Camino = Fin | Cofre [Objeto] Camino | Nada Camino
 
 caminoBase = Fin
+caminoConTesoroAlInicio =  Cofre [Tesoro,Cacharro] ( Nada Fin ) 
 caminoConTesoro = Nada(
                       Nada (
                          Nada (
@@ -83,11 +84,15 @@ esTesoro :: Objeto -> Bool
 esTesoro Tesoro = True
 esTesoro _      = False
 
+
 --b
 pasosHastaTesoro :: Camino -> Int
-pasosHastaTesoro Fin            = 0
+--PRECOND: Tiene que haber al menos un tesoro
+pasosHastaTesoro Fin            = error "Llegaste al fin, debiste haber encontrado un tesoro en el camino"
 pasosHastaTesoro (Nada c)       = 1 + pasosHastaTesoro c
-pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs) then 0 else 1 + pasosHastaTesoro c     
+pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs) 
+                                    then 0 
+                                    else 1 + pasosHastaTesoro c    
 
 --c
 hayTesoroEn :: Int -> Camino -> Bool
