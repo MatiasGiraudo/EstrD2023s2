@@ -198,9 +198,8 @@ toList (NodeT x t1 t2) = toList t1 ++ [x] ++ toList t2
 --10
 levelN :: Int -> Tree a -> [a]
 levelN _ EmptyT          = []
-levelN n (NodeT x t1 t2) = if n == 0 
-                            then [x]
-                            else levelN (n-1) t1 ++ levelN (n-1) t2
+levelN 0 (NodeT x t1 t2) = [x]
+levelN n (NodeT x t1 t2) = levelN (n-1) t1 ++ levelN (n-1) t2                            
 
 --11
 listPerLevel :: Tree a -> [[a]]
