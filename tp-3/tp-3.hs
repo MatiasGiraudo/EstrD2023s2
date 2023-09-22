@@ -162,7 +162,7 @@ perteneceT _ EmptyT         = False
 perteneceT e (NodeT y t1 t2) = (elementosIguales e y) || (perteneceT e t1) || (perteneceT e t2)
 
 elementosIguales :: Eq a => a -> a -> Bool
-elementosIguales x y = if(x == y) then True else False
+elementosIguales x y = x == y
 
 --5
 aparicionesT :: Eq a => a -> Tree a -> Int
