@@ -367,12 +367,14 @@ cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 cantQueTrabajanEn p (ConsEmpresa rs) = contRoles p rs
 
 contRoles :: [Proyecto] -> [Rol] -> Int
-contRoles []     _  = 0
-contRoles (p:ps) rs = contarPersonasEnProyecto p rs + contRoles ps rs
+contRoles _     []  = 0
+contRoles ps (r:rs) = sumarSiPertenece ps r + contRoles ps rs
 
-contarPersonasEnProyecto ::  Proyecto -> [Rol] -> Int
-contarPersonasEnProyecto _ []     = 0
-contarPersonasEnProyecto p (r:rs) = unoSi (proyectosIguales p (proyecto r)) + contarPersonasEnProyecto p rs
+sumarSiPertenece :: [Proyecto] -> Rol -> Int
+sumarSiPertenece []     _ = 0
+sumarSiPertenece (p:ps) r = if(perteneceA r p)
+                             then 1
+                             else sumarSiPertenece ps r   
 
 --d
 
@@ -385,3 +387,6 @@ contarPorProyecto []     _  = []
 contarPorProyecto _      [] = []
 contarPorProyecto (p:ps) rs = (p, contarPersonasEnProyecto p rs) : contarPorProyecto ps rs
 
+contarPersonasEnProyecto ::  Proyecto -> [Rol] -> Int
+contarPersonasEnProyecto _ []     = 0
+contarPersonasEnProyecto p (r:rs) = unoSi (proyectosIguales p (proyecto r)) + contarPersonasEnProyecto p rs
