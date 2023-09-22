@@ -64,6 +64,18 @@ caminoConTesoro = Nada(
                          )
                      )
 
+caminoConVariosTesoros = Nada(
+                             Nada (
+                                Cofre [Tesoro,Cacharro, Tesoro] (
+                                    Nada (
+                                        Cofre [Tesoro] (
+                                           Nada Fin
+                                           ) 
+                                        )
+                                    )       
+                                ) 
+                            )                     
+
 caminoSinTesoro = Nada (
                     Nada (
                         Cofre [Cacharro] Fin 
@@ -100,18 +112,17 @@ hayTesoroEn 0 _              = False
 hayTesoroEn _ Fin            = False
 hayTesoroEn n (Nada c)       = hayTesoroEn (n-1) c
 hayTesoroEn n (Cofre objs c) = tieneTesoro objs || hayTesoroEn (n-1) c   
---Consultar si hay que evaluar el caso donde hay cero pasos-----
+
 
 --d
 alMenosNTesoros :: Int -> Camino -> Bool
 alMenosNTesoros n Fin            = n <= 0
 alMenosNTesoros n (Nada c)       = alMenosNTesoros n c
-alMenosNTesoros n (Cofre objs c) = alMenosNTesoros (n-(cantidadTesorosEn objs)) c
+alMenosNTesoros n (Cofre objs c) = alMenosNTesoros (n-(tesorosEncontrados objs)) c
 
-
-cantidadTesorosEn :: [Objeto] -> Int 
-cantidadTesorosEn []         = 0
-cantidadTesorosEn (obj:objs) = unoSi (esTesoro obj) + cantidadTesorosEn objs
+tesorosEncontrados :: [Objeto] -> Int
+tesorosEncontrados []     = 0
+tesorosEncontrados (x:xs) = unoSi (esTesoro x) + tesorosEncontrados xs    
 
 -- # 2 TIPOS ARBOREOS
 --2.1
