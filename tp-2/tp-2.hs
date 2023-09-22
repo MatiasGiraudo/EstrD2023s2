@@ -249,8 +249,10 @@ puedeVencerATodos _ []       = True
 puedeVencerATodos pk (p:pks) = puedeVencer pk p && puedeVencerATodos pk pks
 
 puedeVencer :: Pokemon -> Pokemon -> Bool
-puedeVencer (ConsPokemon t _) (ConsPokemon t2 _) = esTipoSuperior t t2
+puedeVencer pk1 pk2 = superaA pk1 pk2
 
+superaA :: Pokemon -> Pokemon -> Bool
+superaA (ConsPokemon t _) (ConsPokemon t2 _)   = esTipoSuperior t t2
 
 esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
 esTipoSuperior Agua Fuego   = True
