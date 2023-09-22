@@ -244,7 +244,21 @@ cantidadDePkGanan _ _           []      = 0
 cantidadDePkGanan t pksEnemigos (p:pks) = unoSi (esMismoTipoPokemon t (tipoPokemon p) && puedeVencerATodos p pksEnemigos) + cantidadDePkGanan t pksEnemigos pks
                                             
 
+puedeVencerATodos :: Pokemon -> [Pokemon] -> Bool
+puedeVencerATodos _ []       = True
+puedeVencerATodos pk (p:pks) = puedeVencer pk p && puedeVencerATodos pk pks
 
+puedeVencer :: Pokemon -> Pokemon -> Bool
+puedeVencer pk1 pk2 = superaA pk1 pk2
+
+superaA :: Pokemon -> Pokemon -> Bool
+superaA (ConsPokemon t _) (ConsPokemon t2 _)   = esTipoSuperior t t2
+
+esTipoSuperior :: TipoDePokemon -> TipoDePokemon -> Bool
+esTipoSuperior Agua Fuego   = True
+esTipoSuperior Fuego Planta = True
+esTipoSuperior Planta Agua  = True
+esTipoSuperior _      _     = False
 
 --d
 esMaestroPokemon :: Entrenador -> Bool
