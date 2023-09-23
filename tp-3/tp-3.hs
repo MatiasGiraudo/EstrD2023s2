@@ -108,11 +108,14 @@ pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs)
 
 --c 
 hayTesoroEn :: Int -> Camino -> Bool
-hayTesoroEn 0 _              = False
 hayTesoroEn _ Fin            = False
+hayTesoroEn 0 camino         = tieneTesoroEn camino    
 hayTesoroEn n (Nada c)       = hayTesoroEn (n-1) c
-hayTesoroEn n (Cofre objs c) = tieneTesoro objs || hayTesoroEn (n-1) c   
+hayTesoroEn n (Cofre objs c) = hayTesoroEn (n-1) c
 
+tieneTesoroEn :: Camino -> Bool 
+tieneTesoroEn (Cofre objs c) = tieneTesoro objs 
+tieneTesoroEn _              = False 
 
 --d
 alMenosNTesoros :: Int -> Camino -> Bool
