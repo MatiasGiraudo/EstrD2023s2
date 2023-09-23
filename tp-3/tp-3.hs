@@ -269,16 +269,27 @@ eval (Neg n)    = -(eval n)
 -- c) 1 * x = x * 1 = x
 -- d) - (- x) = x
 
+simplificar :: ExpA -> ExpA
+simplificar n = n
+simplificar (Sum n1 n2)  = simplificarSum (simplificar n1) (simplificar n2)
+simplificar (Prod n1 n2) = simplificarProd (simplificar n1) (simplificar n2)
+simplificar (Neg n)      = simplificarNeg (simplificar n)
 
--- simplificar :: ExpA -> ExpA
--- simplificar (Sum 0 n)     = simplificar n
--- simplificar (Sum n 0)     = simplificar n
--- simplificar (Prod 0 _)    = Valor 0
--- simplificar (Prod _ 0)    = Valor 0
--- simplificar (Prod 1 n)    = simplificar n
--- simplificar (Prod n 1)    = simplificar n
--- simplificar (Neg (Neg n)) = simplificar n
--- simplificar n             = n
+simplificarSum :: ExpA -> ExpA -> ExpA
+simplificarSum (Valor 0) n2        = n2
+simplificarSum n1        (Valor 0) = n1
+simplificarSum n1        n2        = Sum n1 n2
+
+simplificarProd :: ExpA -> ExpA -> ExpA
+simplificarProd (Valor 0) n2        = Valor 0
+simplificarProd n1        (Valor 0) = Valor 0
+simplificarProd n1        (Valor 1) = n1
+simplificarProd (Valor 1) n2        = n2
+simplificarProd n1 n2               = Prod n1 n2
+
+simplificarNeg :: ExpA -> ExpA
+simplificarNeg (Neg n) = n
+simplificarNeg n       = Neg n
 
 
 
