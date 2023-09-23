@@ -106,7 +106,7 @@ pasosHastaTesoro (Cofre objs c) = if (tieneTesoro objs)
                                     then 0 
                                     else 1 + pasosHastaTesoro c    
 
---c
+--c 
 hayTesoroEn :: Int -> Camino -> Bool
 hayTesoroEn 0 _              = False
 hayTesoroEn _ Fin            = False
@@ -122,7 +122,15 @@ alMenosNTesoros n (Cofre objs c) = alMenosNTesoros (n-(tesorosEncontrados objs))
 
 tesorosEncontrados :: [Objeto] -> Int
 tesorosEncontrados []     = 0
-tesorosEncontrados (x:xs) = unoSi (esTesoro x) + tesorosEncontrados xs    
+tesorosEncontrados (x:xs) = unoSi (esTesoro x) + tesorosEncontrados xs   
+
+--e
+cantTesorosEntre :: Int -> Int -> Camino -> Int
+cantTesorosEntre _ _ Fin = 0 
+cantTesorosEntre n m (Nada c) =  cantTesorosEntre (n-1) (m-1) c                                                   
+cantTesorosEntre n m (Cofre objs c) =  if n <= 0 && m >= 0
+                                                      then tesorosEncontrados objs + cantTesorosEntre (n-1) (m-1) c
+                                                      else cantTesorosEntre (n-1) (m-1) c
 
 -- # 2 TIPOS ARBOREOS
 --2.1
